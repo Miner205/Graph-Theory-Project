@@ -10,5 +10,15 @@ Raphaël
 https://github.com/Miner205/Graph-Theory-Project
 
 # Project specification :
+graph format txt used :
+...
 
 # ToDo :
+- main while loop
+- floyd-warshall algo
+- absorbing circuit stuff
+- execution traces txt
+- ...
+
+# Functionalities done :
+- Graph: load graph, save graph, adjacency matrix
