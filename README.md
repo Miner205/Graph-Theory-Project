@@ -11,6 +11,7 @@ https://github.com/Miner205/Graph-Theory-Project
 
 # Project specification :
 - vertices are numbered from 0 to nbofvertices-1.
+- weight numerical values : negative values allowed, '0' allowed. No path is represented by '_'.
 - graph format I of txt used - from Project pdf Appendix :
     - Line 1 - Number of vertices
     - Line 2 - Number of arcs

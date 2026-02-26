@@ -1,6 +1,6 @@
 from graph import Graph
 
-g = Graph(4)
+g = Graph(5)
 print(g)
 print()
 g.print_adjacency_matrix()
