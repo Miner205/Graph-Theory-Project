@@ -130,7 +130,6 @@ class Graph:
             distance[i][i] = 0 # Set diagonal at 0, since there's no distance from a vertice to itself in our loopless scenario
         for arc in self.list_arcs:
             distance[arc[0]][arc[1]] = arc[2] # Put the weight of known edges in the correct spots of the distance matrix for initialization
-        # Not handling _ case atm (suggesting + infinity = no edge)
         counter = 0
         for i in range(self.nb_vertices):
             for j in range(self.nb_vertices):
