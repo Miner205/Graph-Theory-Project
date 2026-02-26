@@ -35,6 +35,15 @@ class Graph:
         for arc in self.list_arcs:
             self.adjacency_matrix[arc[0]][arc[1]] = arc[2]
 
+    def reverse_adjacency_matrix(self) -> None:
+        temp = []
+        for i in range(0, len(self.adjacency_matrix)):
+            for j in range(0, len(self.adjacency_matrix)):
+                if self.adjacency_matrix[i][j] != "_":
+                    temp.append((i,j,self.adjacency_matrix[i][j]))
+        self.list_arcs = temp
+        self.nb_arcs = len(temp)
+
     def print_adjacency_matrix(self, with_degrees=False) -> None:
         if with_degrees: in_degree, out_degree = self.compute_degrees()
         max_char_size = 0
