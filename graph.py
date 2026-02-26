@@ -124,7 +124,7 @@ class Graph:
             h += 1
 
     def floyd_warshall(self) -> None:
-        distance = [["_" for i in range(self.nb_vertices)] for j in range(self.nb_vertices)] # L
+        distance = [[float('inf') for i in range(self.nb_vertices)] for j in range(self.nb_vertices)] # L
         predecessors = [[j for i in range(self.nb_vertices)] for j in range(self.nb_vertices)] # P
         for i in range(self.nb_vertices):
             distance[i][i] = 0 # Set diagonal at 0, since there's no distance from a vertice to itself in our loopless scenario
@@ -135,10 +135,7 @@ class Graph:
         for i in range(self.nb_vertices):
             for j in range(self.nb_vertices):
                 for k in range(self.nb_vertices):
-                    assessed = float('inf') if distance[i][j] == "_" else distance[i][j] # This assignation is there to be able to manage the case of infinity edges (i.e. no path) without doubling the amount of lines.
-                    assessor1 = float('inf') if distance[i][k] == "_" else distance[i][k]
-                    assessor2 = float('inf') if distance[k][j] == "_" else distance[k][j]
-                    if assessed > assessor1 + assessor2: # Is the current distance at i->j bigger than the sum of distances i->k and k->j ?
+                    if distance[i][j] > distance[i][k] + distance[k][j]: # Is the current distance at i->j bigger than the sum of distances i->k and k->j ?
                         counter += 1
                         distance[i][j] = distance[i][k] + distance[k][j] # If it does, reassign that distance to the smaller one, the sum.
                         predecessors[i][j] = predecessors[k][j] # Updates predecessor in the matrix
