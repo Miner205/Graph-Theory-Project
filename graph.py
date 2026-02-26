@@ -7,6 +7,7 @@ class Graph:
         self.load_graph_x(x)
         self.adjacency_matrix: list[list[int]] = [[0 for _ in range(self.nb_vertices)] for _ in range(self.nb_vertices)]
         self.compute_adjacency_matrix()
+        self.floyd_warshall_graph = []
 
     def __str__(self):
         return ("nb of vertices: " + str(self.nb_vertices) + '\n' +
@@ -121,3 +122,24 @@ class Graph:
                 print(incidence_matrix[i][j], end=(max_char_size-size_char)*' '+' ')
             print()
             h += 1
+
+    def floyd_warshall(self) -> None:
+        distance = [["_" for i in range(self.nb_vertices)] for j in range(self.nb_vertices)]
+        for i in range(self.nb_vertices):
+            distance[i][i] = 0
+        for arc in self.list_arcs:
+            distance[arc[0]][arc[1]] = arc[2]
+        # Not handling _ case atm (suggesting + infinity = no edge)
+        for i in range(self.nb_vertices):
+            for j in range(self.nb_vertices):
+                for k in range(self.nb_vertices):
+                    if distance[i][j] > distance[i][k] + distance[k][j]: # Is the current distance at i->j bigger than the sum of distances i->k and k->j ?
+                        distance[i][j] = distance[i][k] + distance[k][j] # If it does, reassign that distance to the smaller one, the sum.
+        print(distance)
+        for i in range(self.nb_vertices):
+            if distance[i][i] < 0: # The check is simple : if a path from a vertice to itself is negative, it means 1 - There is a cycle, 2 - Per definition it's absorbent (negative cost). Thus not possible to seek shortest paths here.
+                print("The graph contains an absorbent cycle starting and ending in " + str(i) + ".")
+                self.floyd_warshall_graph = ["absorbent"]
+                return
+        self.floyd_warshall_graph = distance
+        return
