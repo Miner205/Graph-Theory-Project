@@ -35,3 +35,12 @@ https://github.com/Miner205/Graph-Theory-Project
 /!\ attention en prenant des graph du cours : ici la numérotation des vertex commence à partir de 0 et non 1 comme dans le cours.
 - 3 = from HW2.
 - 4 = from HW4.
+- 5 = plan of the correspondences of Paris's metro
+
+# Technicalities about the metro plan :
+- The vertices are the different correspondences of Paris's metro wether it is with another metro line or anything else.
+- The values of the arcs is the distance from one correspondence to the next in terms of number of station.
+- When they were 2 metro lines that contained the same arc, we only kept 1.
+- When they were 2 metro lines that contained the same arc but with different values, we kept the smallest value ignoring the time to change line.
+- We did not include the correspondence between Carrefour - Pleyel and Saint-Denis - Pleyel since we have to walk outside between the 2 but kept the vertex in case we changed our minds.
+- We did not include the correspondence between Saint-Augustin and Saint-Lazare since they are linked by an underground corridor, and it is weird on the metro plan.
