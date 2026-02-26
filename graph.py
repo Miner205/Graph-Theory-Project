@@ -5,7 +5,7 @@ class Graph:
         self.nb_arcs: int = 0
         self.list_arcs: list[tuple[int, int, int]] = list()
         self.load_graph_x(x)
-        self.adjacency_matrix: list[list[int]] = [[0 for _ in range(self.nb_vertices)] for _ in range(self.nb_vertices)]
+        self.adjacency_matrix: list[list] = [['_' for _ in range(self.nb_vertices)] for _ in range(self.nb_vertices)]
         self.compute_adjacency_matrix()
         self.floyd_warshall_graph = []
 
@@ -77,7 +77,6 @@ class Graph:
                 print(f"{in_degree[k]:>{max_char_size}}", end="")
             print()
 
-
     def compute_degrees(self) -> tuple[list[int], list[int]]:
         """return: ([in-degrees=d°-], [out-degrees=d°+])"""
         in_degree = [0 for _ in range(self.nb_vertices)]
@@ -85,14 +84,14 @@ class Graph:
 
         for i in range(self.nb_vertices):
             for j in range(self.nb_vertices):
-                in_degree[j] += 1 if self.adjacency_matrix[i][j] else 0
-                out_degree[i] += 1 if self.adjacency_matrix[i][j] else 0
+                in_degree[j] += 1 if self.adjacency_matrix[i][j] != '_' else 0
+                out_degree[i] += 1 if self.adjacency_matrix[i][j] != '_' else 0
 
         return in_degree, out_degree
 
-    def compute_incidence_matrix(self) -> list[list[int]]:
+    def compute_incidence_matrix(self) -> list[list]:
         """For a directed graph : directed_incidence_matrix"""
-        incidence_matrix = [[0 for _ in range(self.nb_arcs)] for _ in range(self.nb_vertices)]
+        incidence_matrix: list[list] = [['_' for _ in range(self.nb_arcs)] for _ in range(self.nb_vertices)]
         for arc_i in range(len(self.list_arcs)):
             incidence_matrix[self.list_arcs[arc_i][0]][arc_i] = 1
             incidence_matrix[self.list_arcs[arc_i][1]][arc_i] = -1
@@ -106,6 +105,8 @@ class Graph:
                 size_char = len(str(incidence_matrix[i][j]))
                 if size_char > max_char_size:
                     max_char_size = size_char
+        if len(str(self.nb_vertices - 1)) > max_char_size: max_char_size = len(str(self.nb_vertices - 1))
+        if len(str(self.nb_arcs - 1)) > max_char_size: max_char_size = len(str(self.nb_arcs - 1))
 
         print(' ', end=(max_char_size-1)*' '+' ')
         for k in range(self.nb_arcs):
