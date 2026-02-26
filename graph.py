@@ -7,6 +7,7 @@ class Graph:
         self.load_graph_x(x)
         self.adjacency_matrix: list[list] = [['_' for _ in range(self.nb_vertices)] for _ in range(self.nb_vertices)]
         self.compute_adjacency_matrix()
+        self.floyd_warshall_graph = []
 
     def __str__(self):
         return ("nb of vertices: " + str(self.nb_vertices) + '\n' +
@@ -35,6 +36,15 @@ class Graph:
         for arc in self.list_arcs:
             self.adjacency_matrix[arc[0]][arc[1]] = arc[2]
 
+    def reverse_adjacency_matrix(self) -> None:
+        temp = []
+        for i in range(0, len(self.adjacency_matrix)):
+            for j in range(0, len(self.adjacency_matrix)):
+                if self.adjacency_matrix[i][j] != "_":
+                    temp.append((i,j,self.adjacency_matrix[i][j]))
+        self.list_arcs = temp
+        self.nb_arcs = len(temp)
+
     def print_adjacency_matrix(self, with_degrees=False) -> None:
         if with_degrees: in_degree, out_degree = self.compute_degrees()
         max_char_size = 0
@@ -43,31 +53,28 @@ class Graph:
                 size_char = len(str(self.adjacency_matrix[i][j]))
                 if size_char > max_char_size:
                     max_char_size = size_char
-        if len(str(self.nb_vertices - 1)) > max_char_size: max_char_size = len(str(self.nb_vertices - 1))
-        if with_degrees and max_char_size < 3: max_char_size = 3
 
-        print(' ', end=(max_char_size-1)*' '+' ')
         for k in range(self.nb_vertices):
-            size_char = len(str(k))
-            print(k, end=(max_char_size-size_char)*' '+' ')
-        if with_degrees: print("d°+", end="")
+            max_char_size = max(max_char_size, len(str(k)))
+        max_char_size += 4 # Aesthetics
+
+        print(" " * max_char_size, end="")
+        for k in range(self.nb_vertices):
+            print(f"{k:>{max_char_size}}", end="") # i.e., align to the right with a maximum width of max_char_size
+        if with_degrees: print(f"{'d°+':>{max_char_size}}", end="")
         print()
 
-        h = 0
         for i in range(self.nb_vertices):
-            print(h, end=(max_char_size-len(str(h)))*' '+' ')
+            print(f"{i:>{max_char_size}}", end="")
             for j in range(self.nb_vertices):
-                size_char = len(str(self.adjacency_matrix[i][j]))
-                print(self.adjacency_matrix[i][j], end=(max_char_size-size_char)*' '+' ')
-            if with_degrees: print(out_degree[i], end="")
+                print(f"{self.adjacency_matrix[i][j]:>{max_char_size}}", end="")
+            if with_degrees: print(f"{out_degree[i]:>{max_char_size}}", end="")
             print()
-            h += 1
 
         if with_degrees:
-            print('d°-', end=(max_char_size - 3) * ' ' + ' ')
+            print(f"{'d°-':>{max_char_size}}", end="")
             for k in range(self.nb_vertices):
-                size_char = len(str(in_degree[k]))
-                print(in_degree[k], end=(max_char_size - size_char) * ' ' + ' ')
+                print(f"{in_degree[k]:>{max_char_size}}", end="")
             print()
 
     def compute_degrees(self) -> tuple[list[int], list[int]]:
@@ -115,3 +122,77 @@ class Graph:
                 print(incidence_matrix[i][j], end=(max_char_size-size_char)*' '+' ')
             print()
             h += 1
+
+    def floyd_warshall(self) -> None:
+        distance = [["_" for i in range(self.nb_vertices)] for j in range(self.nb_vertices)] # L
+        predecessors = [[j for i in range(self.nb_vertices)] for j in range(self.nb_vertices)] # P
+        for i in range(self.nb_vertices):
+            distance[i][i] = 0 # Set diagonal at 0, since there's no distance from a vertice to itself in our loopless scenario
+        for arc in self.list_arcs:
+            distance[arc[0]][arc[1]] = arc[2] # Put the weight of known edges in the correct spots of the distance matrix for initialization
+        # Not handling _ case atm (suggesting + infinity = no edge)
+        counter = 0
+        for i in range(self.nb_vertices):
+            for j in range(self.nb_vertices):
+                for k in range(self.nb_vertices):
+                    assessed = float('inf') if distance[i][j] == "_" else distance[i][j] # This assignation is there to be able to manage the case of infinity edges (i.e. no path) without doubling the amount of lines.
+                    assessor1 = float('inf') if distance[i][k] == "_" else distance[i][k]
+                    assessor2 = float('inf') if distance[k][j] == "_" else distance[k][j]
+                    if assessed > assessor1 + assessor2: # Is the current distance at i->j bigger than the sum of distances i->k and k->j ?
+                        counter += 1
+                        distance[i][j] = distance[i][k] + distance[k][j] # If it does, reassign that distance to the smaller one, the sum.
+                        predecessors[i][j] = predecessors[k][j] # Updates predecessor in the matrix
+                        print("Modification n°" + str(counter) + " :\n")
+                        print("Updated distance matrix")
+                        max_char_size = 0 # Prints L
+                        for i in range(self.nb_vertices):
+                            for j in range(self.nb_vertices):
+                                size_char = len(str(distance[i][j]))
+                                if size_char > max_char_size:
+                                    max_char_size = size_char
+
+                        for k in range(self.nb_vertices):
+                            max_char_size = max(max_char_size, len(str(k)))
+                        max_char_size += 4 # Aesthetics
+
+                        print(" " * max_char_size, end="")
+                        for k in range(self.nb_vertices):
+                            print(f"{k:>{max_char_size}}", end="")
+                        print()
+
+                        for i in range(self.nb_vertices):
+                            print(f"{i:>{max_char_size}}", end="")
+                            for j in range(self.nb_vertices):
+                                print(f"{distance[i][j]:>{max_char_size}}", end="")
+                            print()
+
+                        print("Updated predecessor matrix")
+                        max_char_size = 0 # Prints P
+                        for i in range(self.nb_vertices):
+                            for j in range(self.nb_vertices):
+                                size_char = len(str(predecessors[i][j]))
+                                if size_char > max_char_size:
+                                    max_char_size = size_char
+
+                        for k in range(self.nb_vertices):
+                            max_char_size = max(max_char_size, len(str(k)))
+                        max_char_size += 4 # Aesthetics
+
+                        print(" " * max_char_size, end="")
+                        for k in range(self.nb_vertices):
+                            print(f"{k:>{max_char_size}}", end="")
+                        print()
+
+                        for i in range(self.nb_vertices):
+                            print(f"{i:>{max_char_size}}", end="")
+                            for j in range(self.nb_vertices):
+                                print(f"{predecessors[i][j]:>{max_char_size}}", end="")
+                            print()
+
+        for i in range(self.nb_vertices):
+            if distance[i][i] < 0: # The check is simple : if a path from a vertice to itself is negative, it means 1 - There is a cycle, 2 - Per definition it's absorbent (negative cost). Thus not possible to seek shortest paths here.
+                print("The graph contains an absorbent cycle starting and ending in " + str(i) + ".")
+                self.floyd_warshall_graph = ["absorbent"]
+                return
+        self.floyd_warshall_graph = distance
+        return
