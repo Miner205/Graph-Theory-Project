@@ -43,4 +43,4 @@ https://github.com/Miner205/Graph-Theory-Project
 - When they were 2 metro lines that contained the same arc, we only kept 1.
 - When they were 2 metro lines that contained the same arc but with different values, we kept the smallest value ignoring the time to change line.
 - We did not include the correspondence between Carrefour - Pleyel and Saint-Denis - Pleyel since we have to walk outside between the 2 but kept the vertex in case we changed our minds.
-- We did not include the correspondence between Saint-Augustin and Saint-Lazare since they are linked by an underground corridor, and it is weird on the metro plan.
+- We did not include the correspondence between Saint-Augustin and Saint-Lazare since they are linked by an underground corridor, and it is weird on the metro plan but kept the vertex in case we changed our minds.
