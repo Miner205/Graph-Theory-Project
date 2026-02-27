@@ -9,10 +9,11 @@ g.print_adjacency_matrix(with_degrees=True)
 print()
 g.print_incidence_matrix()
 
-g.adjacency_matrix[0][4] = float('inf')
+g.adjacency_matrix[0][4] = "_"
 g.print_adjacency_matrix()
 g.reverse_adjacency_matrix()
 print(g.list_arcs)
 
 print("\n\n\n\n\n")
 g.floyd_warshall()
+print(g.minimum_path(0,4))

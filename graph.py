@@ -134,6 +134,13 @@ class Graph:
         for i in range(self.nb_vertices):
             for j in range(self.nb_vertices):
                 for k in range(self.nb_vertices):
+                    print("i : " + str(i) + "; j : " + str(j) + "; k : " + str(k))
+                    if i == 0 and j == 4 and k == 3:
+                        print("Non realizing modification ?")
+                        print(distance[i][j])
+                        print(distance[i][k])
+                        print(distance[k][j])
+                        print(distance[i][j] > distance[i][k] + distance[k][j])
                     if distance[i][j] > distance[i][k] + distance[k][j]: # Is the current distance at i->j bigger than the sum of distances i->k and k->j ?
                         counter += 1
                         distance[i][j] = distance[i][k] + distance[k][j] # If it does, reassign that distance to the smaller one, the sum.
@@ -141,48 +148,48 @@ class Graph:
                         print("Modification n°" + str(counter) + " :\n")
                         print("Updated distance matrix")
                         max_char_size = 0 # Prints L
-                        for i in range(self.nb_vertices):
-                            for j in range(self.nb_vertices):
-                                size_char = len(str(distance[i][j]))
+                        for l in range(self.nb_vertices):
+                            for m in range(self.nb_vertices):
+                                size_char = len(str(distance[l][m]))
                                 if size_char > max_char_size:
                                     max_char_size = size_char
 
-                        for k in range(self.nb_vertices):
-                            max_char_size = max(max_char_size, len(str(k)))
+                        for l in range(self.nb_vertices):
+                            max_char_size = max(max_char_size, len(str(l)))
                         max_char_size += 4 # Aesthetics
 
                         print(" " * max_char_size, end="")
-                        for k in range(self.nb_vertices):
-                            print(f"{k:>{max_char_size}}", end="")
+                        for l in range(self.nb_vertices):
+                            print(f"{l:>{max_char_size}}", end="")
                         print()
 
-                        for i in range(self.nb_vertices):
-                            print(f"{i:>{max_char_size}}", end="")
-                            for j in range(self.nb_vertices):
-                                print(f"{distance[i][j]:>{max_char_size}}", end="")
+                        for l in range(self.nb_vertices):
+                            print(f"{l:>{max_char_size}}", end="")
+                            for m in range(self.nb_vertices):
+                                print(f"{distance[l][m]:>{max_char_size}}", end="")
                             print()
 
                         print("Updated predecessor matrix")
                         max_char_size = 0 # Prints P
-                        for i in range(self.nb_vertices):
-                            for j in range(self.nb_vertices):
-                                size_char = len(str(predecessors[i][j]))
+                        for l in range(self.nb_vertices):
+                            for m in range(self.nb_vertices):
+                                size_char = len(str(predecessors[l][m]))
                                 if size_char > max_char_size:
                                     max_char_size = size_char
 
-                        for k in range(self.nb_vertices):
-                            max_char_size = max(max_char_size, len(str(k)))
+                        for l in range(self.nb_vertices):
+                            max_char_size = max(max_char_size, len(str(l)))
                         max_char_size += 4 # Aesthetics
 
                         print(" " * max_char_size, end="")
-                        for k in range(self.nb_vertices):
-                            print(f"{k:>{max_char_size}}", end="")
+                        for l in range(self.nb_vertices):
+                            print(f"{l:>{max_char_size}}", end="")
                         print()
 
-                        for i in range(self.nb_vertices):
-                            print(f"{i:>{max_char_size}}", end="")
-                            for j in range(self.nb_vertices):
-                                print(f"{predecessors[i][j]:>{max_char_size}}", end="")
+                        for l in range(self.nb_vertices):
+                            print(f"{l:>{max_char_size}}", end="")
+                            for m in range(self.nb_vertices):
+                                print(f"{predecessors[l][m]:>{max_char_size}}", end="")
                             print()
 
         for i in range(self.nb_vertices):
@@ -190,5 +197,26 @@ class Graph:
                 print("The graph contains an absorbent cycle starting and ending in " + str(i) + ".")
                 self.floyd_warshall_graph = ["absorbent"]
                 return
-        self.floyd_warshall_graph = distance
+        self.floyd_warshall_graph = [distance,predecessors]
         return
+
+    def minimum_path(self, a, b) -> list:
+        if self.floyd_warshall_graph == []:
+            print("The Floyd_Warshall algorithm was not executed.")
+            return []
+        elif self.floyd_warshall_graph == ["absorbent"]:
+            print("The graph contains an absorbent cycle ; minimum paths cannot be found.")
+            return ["absorbent"]
+        elif a > len(self.adjacency_matrix) or b > len(self.adjacency_matrix) or b < 0 or a < 0:
+            print("Invalid start and endpoint")
+            return ["Error"]
+        else: 
+            path = [b]
+            while a not in path:
+                if self.floyd_warshall_graph[0][a][path[0]] == float('inf'):
+                    print('There is no path between the provided vertices')
+                    return ["nonexistent"]
+                path.insert(0,self.floyd_warshall_graph[1][a][path[0]])
+            return path
+
+        
