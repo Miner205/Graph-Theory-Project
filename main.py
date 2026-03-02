@@ -16,4 +16,4 @@ print(g.list_arcs)
 
 print("\n\n\n\n\n")
 g.floyd_warshall()
-print(g.minimum_path(0,4))
+print(g.minimum_path(0,5))

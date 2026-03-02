@@ -135,9 +135,9 @@ class Graph:
         for arc in self.list_arcs:
             distance[arc[0]][arc[1]] = arc[2] # Put the weight of known edges in the correct spots of the distance matrix for initialization
         counter = 0
-        for i in range(self.nb_vertices):
-            for j in range(self.nb_vertices):
-                for k in range(self.nb_vertices):
+        for k in range(self.nb_vertices):
+            for i in range(self.nb_vertices):
+                for j in range(self.nb_vertices):
                     if distance[i][j] > distance[i][k] + distance[k][j]: # Is the current distance at i->j bigger than the sum of distances i->k and k->j ?
                         counter += 1
                         distance[i][j] = distance[i][k] + distance[k][j] # If it does, reassign that distance to the smaller one, the sum.
