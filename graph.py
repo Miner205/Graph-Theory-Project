@@ -1,3 +1,5 @@
+import os
+
 
 class Graph:
     def __init__(self, x: int):
@@ -15,6 +17,8 @@ class Graph:
                 str([arc for arc in self.list_arcs]))
 
     def load_graph_x(self, x: int) -> None:
+        if not os.path.isfile("./graphs/"+str(x)+".txt"):
+            raise ValueError("The specified graph does not exist.")
         with open("./graphs/"+str(x)+".txt", 'r') as f:
             line = f.readline()
             self.nb_vertices = int(line.strip('\n'))
@@ -134,13 +138,6 @@ class Graph:
         for i in range(self.nb_vertices):
             for j in range(self.nb_vertices):
                 for k in range(self.nb_vertices):
-                    print("i : " + str(i) + "; j : " + str(j) + "; k : " + str(k))
-                    if i == 0 and j == 4 and k == 3:
-                        print("Non realizing modification ?")
-                        print(distance[i][j])
-                        print(distance[i][k])
-                        print(distance[k][j])
-                        print(distance[i][j] > distance[i][k] + distance[k][j])
                     if distance[i][j] > distance[i][k] + distance[k][j]: # Is the current distance at i->j bigger than the sum of distances i->k and k->j ?
                         counter += 1
                         distance[i][j] = distance[i][k] + distance[k][j] # If it does, reassign that distance to the smaller one, the sum.
