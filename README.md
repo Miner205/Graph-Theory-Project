@@ -4,7 +4,7 @@ Finding shortest paths using the Floyd–Warshall algorithm
 # int3 - Our Team :
 Arthur Donnat
 Arthur Delannoy
-Raphaël
+Raphaël Lesterlin
 
 # GitHub link :
 https://github.com/Miner205/Graph-Theory-Project
@@ -31,12 +31,14 @@ https://github.com/Miner205/Graph-Theory-Project
     degrees(for fun), incidence matrix(for fun).
 
 # Test graphs list - provenance/use case :
-- 1 = from Project pdf, Appendix Example.
-- 2 = graph from ppt cours 1, pour test incidence matrix.
+- 1 to 13 = test graphs provided.
+- 14 = from Project pdf, Appendix Example.
+- 15 = graph from ppt cours 1, pour test incidence matrix.
 /!\ attention en prenant des graph du cours : ici la numérotation des vertex commence à partir de 0 et non 1 comme dans le cours.
-- 3 = from HW2.
-- 4 = from HW4.
-- 5 = plan of the correspondences of Paris's metro
+- 16 = from HW2.
+- 17 = from HW4.
+- 18 = from Shortest path problem Wikipedia page.
+- 19 = plan of the correspondences of Paris's metro.
 
 # Technicalities about the metro plan :
 - The vertices are the different correspondences of Paris's metro wether it is with another metro line or anything else.
