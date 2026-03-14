@@ -1,7 +1,7 @@
 # Graph Theory Project
 Finding shortest paths using the Floyd–Warshall algorithm
 
-# int3 - Our Team :
+# int2 - Our Team - Groupe 4 :
 Arthur Donnat
 Arthur Delannoy
 Raphaël Lesterlin
