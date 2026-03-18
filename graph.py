@@ -1,8 +1,9 @@
-import os
+import os.path
 
 
 class Graph:
-    def __init__(self, x: int):
+    def __init__(self, x: str):
+        self.name: str = x
         self.nb_vertices: int = 0
         self.nb_arcs: int = 0
         self.list_arcs: list[tuple[int, int, int]] = list()
@@ -12,14 +13,13 @@ class Graph:
         self.floyd_warshall_graph = []
 
     def __str__(self):
-        return ("nb of vertices: " + str(self.nb_vertices) + '\n' +
+        return (self.name + ':\n' +
+                "nb of vertices: " + str(self.nb_vertices) + '\n' +
                 "nb of arcs: " + str(self.nb_arcs) + '\n' +
                 str([arc for arc in self.list_arcs]))
 
-    def load_graph_x(self, x: int) -> None:
-        if not os.path.isfile("./graphs/"+str(x)+".txt"):
-            raise ValueError("The specified graph does not exist.")
-        with open("./graphs/"+str(x)+".txt", 'r') as f:
+    def load_graph_x(self, x: str) -> None:
+        with open("./graphs/"+x+".txt", 'r') as f:
             line = f.readline()
             self.nb_vertices = int(line.strip('\n'))
             line = f.readline()
@@ -29,8 +29,8 @@ class Graph:
                 l_temp = line.strip('\n').split(' ')
                 self.list_arcs.append((int(l_temp[0]), int(l_temp[1]), int(l_temp[2])))
 
-    def save_graph_as_x(self, x: int) -> None:
-        with open("./graphs/" + str(x) + ".txt", 'w') as f:
+    def save_graph_as_x(self, x: str) -> None:
+        with open("./graphs/" + x + ".txt", 'w') as f:
             f.write(str(self.nb_vertices) + '\n')
             f.write(str(self.nb_arcs) + '\n')
             for arc in self.list_arcs:
@@ -127,7 +127,7 @@ class Graph:
             print()
             h += 1
 
-    def floyd_warshall(self) -> None:
+    def floyd_warshall(self, show_modifications) -> None:
         distance = [[float('inf') for i in range(self.nb_vertices)] for j in range(self.nb_vertices)] # L
         predecessors = [[j for i in range(self.nb_vertices)] for j in range(self.nb_vertices)] # P
         for i in range(self.nb_vertices):
@@ -142,78 +142,89 @@ class Graph:
                         counter += 1
                         distance[i][j] = distance[i][k] + distance[k][j] # If it does, reassign that distance to the smaller one, the sum.
                         predecessors[i][j] = predecessors[k][j] # Updates predecessor in the matrix
-                        print("Modification n°" + str(counter) + " :\n")
-                        print("Updated distance matrix")
-                        max_char_size = 0 # Prints L
-                        for l in range(self.nb_vertices):
-                            for m in range(self.nb_vertices):
-                                size_char = len(str(distance[l][m]))
-                                if size_char > max_char_size:
-                                    max_char_size = size_char
+                        if show_modifications is True:
+                            print("Modification n°" + str(counter) + ":\n")
+                            print("Updated distance matrix")
+                            max_char_size = 0 # Prints L
+                            for l in range(self.nb_vertices):
+                                for m in range(self.nb_vertices):
+                                    size_char = len(str(distance[l][m]))
+                                    if size_char > max_char_size:
+                                        max_char_size = size_char
 
-                        for l in range(self.nb_vertices):
-                            max_char_size = max(max_char_size, len(str(l)))
-                        max_char_size += 4 # Aesthetics
+                            for l in range(self.nb_vertices):
+                                max_char_size = max(max_char_size, len(str(l)))
+                            max_char_size += 4 # Aesthetics
 
-                        print(" " * max_char_size, end="")
-                        for l in range(self.nb_vertices):
-                            print(f"{l:>{max_char_size}}", end="")
-                        print()
-
-                        for l in range(self.nb_vertices):
-                            print(f"{l:>{max_char_size}}", end="")
-                            for m in range(self.nb_vertices):
-                                print(f"{distance[l][m]:>{max_char_size}}", end="")
+                            print(" " * max_char_size, end="")
+                            for l in range(self.nb_vertices):
+                                print(f"{l:>{max_char_size}}", end="")
                             print()
 
-                        print("Updated predecessor matrix")
-                        max_char_size = 0 # Prints P
-                        for l in range(self.nb_vertices):
-                            for m in range(self.nb_vertices):
-                                size_char = len(str(predecessors[l][m]))
-                                if size_char > max_char_size:
-                                    max_char_size = size_char
+                            for l in range(self.nb_vertices):
+                                print(f"{l:>{max_char_size}}", end="")
+                                for m in range(self.nb_vertices):
+                                    print(f"{distance[l][m]:>{max_char_size}}", end="")
+                                print()
 
-                        for l in range(self.nb_vertices):
-                            max_char_size = max(max_char_size, len(str(l)))
-                        max_char_size += 4 # Aesthetics
+                            print("\nUpdated predecessor matrix")
+                            max_char_size = 0 # Prints P
+                            for l in range(self.nb_vertices):
+                                for m in range(self.nb_vertices):
+                                    size_char = len(str(predecessors[l][m]))
+                                    if size_char > max_char_size:
+                                        max_char_size = size_char
 
-                        print(" " * max_char_size, end="")
-                        for l in range(self.nb_vertices):
-                            print(f"{l:>{max_char_size}}", end="")
-                        print()
+                            for l in range(self.nb_vertices):
+                                max_char_size = max(max_char_size, len(str(l)))
+                            max_char_size += 4 # Aesthetics
 
-                        for l in range(self.nb_vertices):
-                            print(f"{l:>{max_char_size}}", end="")
-                            for m in range(self.nb_vertices):
-                                print(f"{predecessors[l][m]:>{max_char_size}}", end="")
+                            print(" " * max_char_size, end="")
+                            for l in range(self.nb_vertices):
+                                print(f"{l:>{max_char_size}}", end="")
+                            print()
+
+                            for l in range(self.nb_vertices):
+                                print(f"{l:>{max_char_size}}", end="")
+                                for m in range(self.nb_vertices):
+                                    print(f"{predecessors[l][m]:>{max_char_size}}", end="")
+                                print()
+
                             print()
 
         for i in range(self.nb_vertices):
             if distance[i][i] < 0: # The check is simple : if a path from a vertice to itself is negative, it means 1 - There is a cycle, 2 - Per definition it's absorbent (negative cost). Thus not possible to seek shortest paths here.
-                print("The graph contains an absorbent cycle starting and ending in " + str(i) + ".")
+                print("The graph contains at least one absorbent cycle starting and ending in " + str(i) + ".")
                 self.floyd_warshall_graph = ["absorbent"]
                 return
         self.floyd_warshall_graph = [distance,predecessors]
         return
 
-    def minimum_path(self, a, b) -> list:
-        if self.floyd_warshall_graph == []:
-            print("The Floyd_Warshall algorithm was not executed.")
-            return []
-        elif self.floyd_warshall_graph == ["absorbent"]:
-            print("The graph contains an absorbent cycle ; minimum paths cannot be found.")
-            return ["absorbent"]
-        elif a > len(self.adjacency_matrix) or b > len(self.adjacency_matrix) or b < 0 or a < 0:
-            print("Invalid start and endpoint")
-            return ["Error"]
-        else: 
-            path = [b]
-            while a not in path:
-                if self.floyd_warshall_graph[0][a][path[0]] == float('inf'):
-                    print('There is no path between the provided vertices')
-                    return ["nonexistent"]
-                path.insert(0,self.floyd_warshall_graph[1][a][path[0]])
-            return path
+    def minimum_path(self, a, b) -> (float, list, list):
+        distance = []
+        path = [b]
+        if self.floyd_warshall_graph[0][a][path[0]] == float('inf'):
+            print('There is no path between the provided vertices.')
+            return self.floyd_warshall_graph[0][a][b], distance, ["nonexistent"]
+        distance.insert(0, self.floyd_warshall_graph[0][a][path[0]])
+        path.insert(0, self.floyd_warshall_graph[1][a][path[0]])
+        if a != path[0]:
+            distance[0] -= self.floyd_warshall_graph[0][a][path[0]]
+        while a != path[0]:
+            distance.insert(0, self.floyd_warshall_graph[0][a][path[0]])
+            path.insert(0, self.floyd_warshall_graph[1][a][path[0]])
+            if a != path[0]:
+                distance[0] -= self.floyd_warshall_graph[0][a][path[0]]
+        return self.floyd_warshall_graph[0][a][b], distance, path
 
-        
+    def save_minimum_value_paths_as_graph(self, x: str) -> None:
+        with open("./graphs/" + x + ".txt", 'w') as f:
+            f.write(str(self.nb_vertices) + '\n')
+            arcs = []
+            for initial_vertex in range(len(self.floyd_warshall_graph[0])):
+                for terminal_vertex in range(len(self.floyd_warshall_graph[0][initial_vertex])):
+                    if self.floyd_warshall_graph[0][initial_vertex][terminal_vertex] != float('inf') and (initial_vertex != terminal_vertex or self.floyd_warshall_graph[0][initial_vertex][terminal_vertex] != 0):
+                        arcs.append(str(initial_vertex) + ' ' + str(terminal_vertex) + ' ' + str(self.floyd_warshall_graph[0][initial_vertex][terminal_vertex]))
+            f.write(str(len(arcs)) + '\n')
+            for arc in arcs:
+                f.write(arc + '\n')

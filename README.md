@@ -31,16 +31,16 @@ https://github.com/Miner205/Graph-Theory-Project
     degrees(for fun), incidence matrix(for fun).
 
 # Test graphs list - provenance/use case :
-- 1 to 13 = test graphs provided.
-- 14 = from Project pdf, Appendix Example.
-- 15 = graph from ppt cours 1, pour test incidence matrix.
+- 1 to 13 = Provided test graphs.
+- 14 = Appendix example from Project pdf.
+- 15 = Graph from the first ppt, to test the incidence matrix.
 /!\ attention en prenant des graph du cours : ici la numérotation des vertex commence à partir de 0 et non 1 comme dans le cours.
-- 16 = from HW2.
-- 17 = from HW4.
-- 18 = from Shortest path problem Wikipedia page.
-- 19 = plan of the correspondences of Paris's metro.
+- 16 = Graph from HW2.
+- 17 = Graph from HW4.
+- 18 = Graph from "Shortest path problem" Wikipedia page.
+- 19 = Paris metro interchange graph.
 
-# Technicalities about the metro plan :
+# Technicalities about the metro interchange graph :
 - The vertices are the different correspondences of Paris's metro wether it is with another metro line or anything else.
 - The values of the arcs is the distance from one correspondence to the next in terms of number of station.
 - When they were 2 metro lines that contained the same arc, we only kept 1.
