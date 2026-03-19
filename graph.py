@@ -13,10 +13,10 @@ class Graph:
         self.floyd_warshall_graph = []
 
     def __str__(self):
-        return (self.name + ':\n' +
-                "nb of vertices: " + str(self.nb_vertices) + '\n' +
-                "nb of arcs: " + str(self.nb_arcs) + '\n' +
-                str([arc for arc in self.list_arcs]))
+        return ("Graph " + self.name + " details:\n" +
+                "Nb of vertices: " + str(self.nb_vertices) + '\n' +
+                "Nb of arcs: " + str(self.nb_arcs) + '\n' +
+                "All arcs: " + str([arc for arc in self.list_arcs]))
 
     def load_graph_x(self, x: str) -> None:
         with open("./graphs/"+x+".txt", 'r') as f:
@@ -49,7 +49,7 @@ class Graph:
         self.list_arcs = temp
         self.nb_arcs = len(temp)
 
-    def print_adjacency_matrix(self, with_degrees=False) -> None:
+    def print_adjacency_matrix(self, with_degrees=False, aesthetic_spaces=1) -> None:
         if with_degrees: in_degree, out_degree = self.compute_degrees()
         max_char_size = 0
         for i in range(self.nb_vertices):
@@ -57,14 +57,13 @@ class Graph:
                 size_char = len(str(self.adjacency_matrix[i][j]))
                 if size_char > max_char_size:
                     max_char_size = size_char
-
-        for k in range(self.nb_vertices):
-            max_char_size = max(max_char_size, len(str(k)))
-        max_char_size += 4 # Aesthetics
+        max_char_size = max(max_char_size, len(str(self.nb_vertices - 1)))
+        if with_degrees: max_char_size = max(max_char_size, 3)
+        max_char_size += 1 + aesthetic_spaces
 
         print(" " * max_char_size, end="")
         for k in range(self.nb_vertices):
-            print(f"{k:>{max_char_size}}", end="") # i.e., align to the right with a maximum width of max_char_size
+            print(f"{k:>{max_char_size}}", end="")  # i.e., align to the right with a maximum width of max_char_size
         if with_degrees: print(f"{'d°+':>{max_char_size}}", end="")
         print()
 
@@ -101,7 +100,7 @@ class Graph:
             incidence_matrix[self.list_arcs[arc_i][1]][arc_i] = -1
         return incidence_matrix
 
-    def print_incidence_matrix(self) -> None:
+    def print_incidence_matrix(self, aesthetic_spaces=1) -> None:
         incidence_matrix = self.compute_incidence_matrix()
         max_char_size = 0
         for i in range(self.nb_vertices):
@@ -109,23 +108,20 @@ class Graph:
                 size_char = len(str(incidence_matrix[i][j]))
                 if size_char > max_char_size:
                     max_char_size = size_char
-        if len(str(self.nb_vertices - 1)) > max_char_size: max_char_size = len(str(self.nb_vertices - 1))
-        if len(str(self.nb_arcs - 1)) > max_char_size: max_char_size = len(str(self.nb_arcs - 1))
+        max_char_size = max(max_char_size, len(str(self.nb_vertices - 1)))
+        max_char_size = max(max_char_size, len(str(self.nb_arcs - 1)))
+        max_char_size += 1 + aesthetic_spaces
 
-        print(' ', end=(max_char_size-1)*' '+' ')
+        print(" " * max_char_size, end="")
         for k in range(self.nb_arcs):
-            size_char = len(str(k))
-            print(k, end=(max_char_size-size_char)*' '+' ')
+            print(f"{k:>{max_char_size}}", end="")  # i.e., align to the right with a maximum width of max_char_size
         print()
 
-        h = 0
         for i in range(self.nb_vertices):
-            print(h, end=(max_char_size-len(str(h)))*' '+' ')
+            print(f"{i:>{max_char_size}}", end="")
             for j in range(self.nb_arcs):
-                size_char = len(str(incidence_matrix[i][j]))
-                print(incidence_matrix[i][j], end=(max_char_size-size_char)*' '+' ')
+                print(f"{incidence_matrix[i][j]:>{max_char_size}}", end="")
             print()
-            h += 1
 
     def floyd_warshall(self, show_modifications) -> None:
         distance = [[float('inf') for i in range(self.nb_vertices)] for j in range(self.nb_vertices)] # L

@@ -31,11 +31,12 @@ def choosing_graph(current_graph) -> Graph:
 
 def display_graph(current_graph) -> None:
     display_choice = None
-    while display_choice not in ["adjacency", "incidence", "both", "go back"]:
+    while display_choice not in ["adjacency", "degrees", "incidence", "both", "go back"]:
         if display_choice is not None:
             print("This is not a valid display.\n")
         print("How would you like to display the graph:")
         print('"adjacency": Adjacency matrix of the graph.')
+        print('"degrees": Adjacency matrix with degrees of the graph.')
         print('"incidence": Incidence matrix of the graph.')
         print('"both": Both matrices of the graph')
         print('Type "go back" to go back to the main options.')
@@ -44,6 +45,10 @@ def display_graph(current_graph) -> None:
     if display_choice != "go back":
         print(current_graph)
         print()
+        if display_choice == "degrees":
+            print("Adjacency matrix with degrees:")
+            current_graph.print_adjacency_matrix(with_degrees=True)
+            print()
         if display_choice == "adjacency" or display_choice == "both":
             print("Adjacency matrix:")
             current_graph.print_adjacency_matrix()
