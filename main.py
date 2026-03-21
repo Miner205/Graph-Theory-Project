@@ -2,6 +2,9 @@ import os
 from graph import Graph
 
 
+# Functional programing might have made the main loop easier and more scalable.
+# However, since I only thought about it really late and am not sure how to do it, so I did not do it.
+
 def choosing_graph(current_graph) -> Graph:
     graph_choice = None
     while graph_choice is None or ((graph_choice != "go back" or current_graph is None) and os.path.isfile("./graphs/" + graph_choice + ".txt") is False):
@@ -88,6 +91,8 @@ def path_to_str(distances, path) -> str:
 
 
 # TODO: extract floyd-warshall + modifications in .txt
+# After thinking about it and trying it for a while, I chose deliberately to not do the "go back" in this function.
+# This is because, with the way everything has been implemented, it would look absolutely awful (in my opinion).
 def get_minimum_path(current_graph) -> None:
     floyd_warshall_choice = "yes"
     if current_graph.floyd_warshall_graph:
@@ -109,7 +114,6 @@ def get_minimum_path(current_graph) -> None:
     if current_graph.floyd_warshall_graph == ["absorbent"]:
         print("No minimum-value path can be computed.")
     else:
-        print(current_graph.floyd_warshall_graph)
         print('Do you want to see all minimum-value paths ("yes"):')
         all_path_choice = input()
         print()
@@ -125,19 +129,23 @@ def get_minimum_path(current_graph) -> None:
             while starting_point_choice is None or starting_point_choice >= current_graph.nb_vertices or starting_point_choice < 0:
                 if starting_point_choice is not None:
                     print("The vertex does not exist in the graph.\n")
-                # TODO: go back
                 print('Choose a starting point:')
-                # TODO: prevent other types
-                starting_point_choice = int(input())
+                try:
+                    starting_point_choice = int(input())
+                except ValueError:
+                    print("\nVertices must be integers.")
+                    starting_point_choice = None
                 print()
             end_point_choice = None
             while end_point_choice is None or end_point_choice >= current_graph.nb_vertices or end_point_choice < 0:
                 if end_point_choice is not None:
                     print("The vertex does not exist in the graph.\n")
-                # TODO: go back
                 print('Choose an end point:')
-                # TODO: prevent other types
-                end_point_choice = int(input())
+                try:
+                    end_point_choice = int(input())
+                except ValueError:
+                    print("\nVertices must be integers.")
+                    end_point_choice = None
                 print()
             total_path_value, path_values, minimum_path = current_graph.minimum_path(starting_point_choice, end_point_choice)
             if minimum_path != ["nonexistent"]:
@@ -146,18 +154,33 @@ def get_minimum_path(current_graph) -> None:
     print("\n\n")
 
 
-# TODO: prevent when absorbent
-# TODO: go back
 def minimum_value_as_graph(current_graph) -> Graph:
-    if not current_graph.floyd_warshall_graph:
+    floyd_warshall_choice = "yes"
+    if current_graph.floyd_warshall_graph:
+        print('The Floyd-Warshall algorithm was already computed for graph "' + current_graph.name + '", do you want to redo it ("yes"):')
+        floyd_warshall_choice = input()
+        print()
+    if floyd_warshall_choice == "yes":
         current_graph.floyd_warshall(False)
-    current_graph.save_minimum_value_paths_as_graph(current_graph.name + "_minimum_value_paths")
-    print('The graph "' + current_graph.name + '_minimum_value_paths" as been created.')
-    print('Would you like to set "' + current_graph.name + '_minimum_value_paths" as your current graph ("yes"):')
-    set_graph_choice = input()
-    print()
-    if set_graph_choice == "yes":
-        return Graph(current_graph.name + '_minimum_value_paths')
+
+    if current_graph.floyd_warshall_graph == ["absorbent"]:
+        print("No minimum-value path can be computed.\n")
+    else:
+        name_choice = None
+        while name_choice is None or (name_choice != "go back" and os.path.isfile("./graphs/" + name_choice + ".txt") is True):
+            if name_choice is not None:
+                print("A graph with this name already exists.\n")
+            print('Enter a name for the minimum-value path graph (Type "go back" to go back to the main options):')
+            name_choice = input()
+            print()
+        if name_choice != "go back":
+            current_graph.save_minimum_value_paths_as_graph(name_choice)
+            print('The graph "' + name_choice + '" as been created.')
+            print('Would you like to set "' + name_choice + '" as your current graph ("yes"):')
+            set_graph_choice = input()
+            print()
+            if set_graph_choice == "yes":
+                return Graph(name_choice)
     return current_graph
 
 
@@ -174,17 +197,17 @@ if __name__ == '__main__':
     graph = choosing_graph(None)
     print('The graph "' + graph.name + '" as been set as the current graph.\n\n\n')
     quit_program = False
-    while quit_program is False:
+    while not quit_program:
         option_choice = None
         while option_choice not in ["graph", "display", "copy", "minimum-value path", "save minimum-value graph", "quit"]:
             if option_choice is not None:
                 print("This is not a valid option.\n")
             print("What would you like to do:")
             print('"graph": Change graph.')
-            print('"display": Display graph.')
+            print('"display": Display graph as matrix.')
             print('"copy": Copy graph.')
-            print('"minimum-value path": Compute the minimum-value paths in the graph using Floyd-Warshall algorithm.')
-            print('"save minimum-value graph": save the minimum-value paths as a new graph.')
+            print('"minimum-value path": Compute minimum-value paths in graph using Floyd-Warshall algorithm.')
+            print('"save minimum-value graph": Save minimum-value paths as a new graph.')
             print('"quit": Quit the program.')
             option_choice = input()
             print()
