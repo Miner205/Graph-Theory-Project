@@ -10,25 +10,29 @@ Raphaël Lesterlin
 https://github.com/Miner205/Graph-Theory-Project
 
 # Project specification :
-- vertices are numbered from 0 to nbofvertices-1.
+- Directed graph.
+- Weighted graph.
 - weight numerical values : negative values allowed, '0' allowed. No path is represented by '_'.
+- vertices are numbered/named from 0 to nbofvertices-1.
+- At most one arc from a vertex x to a vertex y.
 - graph format I of txt used - from Project pdf Appendix :
     - Line 1 - Number of vertices
     - Line 2 - Number of arcs
     - Lines 3 to 3 + number of arcs - Initial vertex, terminal vertex, arc value
 - graph format II of txt used :
-...
+... (finally, not done)
 
 # ToDo :
-- main while loop
-- floyd-warshall algo
-- absorbing circuit stuff
 - execution traces txt
 - ...
 
 # Functionalities done :
 - Graph: load graph, save graph, adjacency matrix, 
-    degrees(for fun), incidence matrix(for fun).
+    degrees(for fun), incidence matrix(for fun ; loops are represented by the value '2' by convention).
+- floyd-warshall algo.
+- absorbing circuit stuff.
+- main while loop.
+- ...
 
 # Test graphs list - provenance/use case :
 - 1 to 13 = Provided test graphs.

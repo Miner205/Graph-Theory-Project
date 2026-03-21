@@ -1,4 +1,3 @@
-import os.path
 
 
 class Graph:
@@ -45,7 +44,7 @@ class Graph:
         for i in range(0, len(self.adjacency_matrix)):
             for j in range(0, len(self.adjacency_matrix)):
                 if self.adjacency_matrix[i][j] != "_":
-                    temp.append((i,j,self.adjacency_matrix[i][j]))
+                    temp.append((i, j, self.adjacency_matrix[i][j]))
         self.list_arcs = temp
         self.nb_arcs = len(temp)
 
@@ -96,8 +95,11 @@ class Graph:
         """For a directed graph : directed_incidence_matrix"""
         incidence_matrix: list[list] = [['_' for _ in range(self.nb_arcs)] for _ in range(self.nb_vertices)]
         for arc_i in range(len(self.list_arcs)):
-            incidence_matrix[self.list_arcs[arc_i][0]][arc_i] = 1
-            incidence_matrix[self.list_arcs[arc_i][1]][arc_i] = -1
+            if self.list_arcs[arc_i][0] == self.list_arcs[arc_i][1]:
+                incidence_matrix[self.list_arcs[arc_i][0]][arc_i] = 2  # if there is a loop, put value '2' by convention.
+            else:
+                incidence_matrix[self.list_arcs[arc_i][0]][arc_i] = 1
+                incidence_matrix[self.list_arcs[arc_i][1]][arc_i] = -1
         return incidence_matrix
 
     def print_incidence_matrix(self, aesthetic_spaces=1) -> None:
