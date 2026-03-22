@@ -1,20 +1,16 @@
 import folium
 from get_stations_coords import get_stations_pos, get_all_stations_pos
-from graph import Graph
 
 
-def draw_metro_graph(graph, with_all_stations=False):
-    # 1. Définir quelques sommets avec GPS (latitude, longitude)
-    vertices = get_stations_pos()
+def draw_metro_graph(graph, with_all_stations=False) -> None:
+    assert graph.name == "19", f"this function is only intended for the Paris metro graph (graph '19', not graph '{graph.name}')."
+    vertices = get_stations_pos()  # get the GPS (latitude, longitude) coords of the nodes.
 
-    # 2. Définir des arêtes entre les sommets
-    edges = graph.list_arcs
+    edges = graph.list_arcs  # get the arcs/edges between the nodes.
 
-    # 3. Créer une carte centrée sur Paris
-    m = folium.Map(location=(48.8566, 2.3522), zoom_start=12)
+    m = folium.Map(location=(48.8566, 2.3522), zoom_start=12)  # create a map centered on Paris.
 
-    # 4. Ajouter les sommets
-    for name, (lat, lon) in vertices.items():
+    for name, (lat, lon) in vertices.items():  # add the nodes to the map.
         folium.CircleMarker(
             location=(lat, lon),
             radius=6,
@@ -35,8 +31,7 @@ def draw_metro_graph(graph, with_all_stations=False):
                     fill_color='purple'
                 ).add_to(m)
 
-    # 5. Ajouter les arêtes (lignes entre sommets)
-    for start, end, weight in edges:
+    for start, end, weight in edges:  # add the edges to the map.
         folium.PolyLine(
             locations=[vertices[start], vertices[end]],
             color='red',
@@ -44,25 +39,22 @@ def draw_metro_graph(graph, with_all_stations=False):
             tooltip=weight
         ).add_to(m)
 
-    # 6. Sauver dans un fichier HTML
+    # save the result in an HTML file
     if with_all_stations:
         file_name = "graphs drawing/metro_graph_with_all_stations_map.html"
         m.save(file_name)
     else:
         file_name = "graphs drawing/metro_graph_map.html"
         m.save(file_name)
-    print(f">html file \"{file_name}\" created.")
+    print(f"HTML file \"{file_name}\" created.")
     curr_choice = None
     while curr_choice is None or (curr_choice != "yes" and curr_choice != "no"):
         if curr_choice is not None:
             print("yes or no ?\n")
         else:
-            print("Do you want to automatically open the html file in your browser? : \"yes\" or \"no\"?")
+            print("Do you want to automatically open the HTML file in your browser? : \"yes\" or \"no\"?")
+            print("note: only correctly open it automatically on Chrome \n; if it opened automatically on Microsoft Edge, you will need to open it manually.")
         curr_choice = input()
     if curr_choice == "yes":
         import webbrowser
         webbrowser.open(file_name)
-
-
-gg = Graph("19")
-draw_metro_graph(gg, with_all_stations=False)

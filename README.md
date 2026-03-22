@@ -28,9 +28,11 @@ https://github.com/Miner205/Graph-Theory-Project
 
 # Functionalities done :
 - Graph: load graph, save graph, adjacency matrix, 
-    degrees(for fun), incidence matrix(for fun ; loops are represented by the value '2' by convention).
-- floyd-warshall algo.
-- absorbing circuit stuff.
+    degrees(for fun), incidence matrix(for fun ; loops are represented by the value '2' by convention),
+    copy graph.
+- floyd-warshall algo : compute minimum-value paths in graph using Floyd-Warshall algorithm,
+and save minimum-value paths as a new graph.
+- absorbing circuit stuff -> in floyd-warshall algo.
 - main while loop.
 - better displays/graphs drawing : method 1 with networkx and matplotlib, method 2 with pygame [WIP/not done], method 3 with folium.
 - ...

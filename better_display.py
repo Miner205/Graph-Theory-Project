@@ -3,18 +3,17 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from pygame.display import get_desktop_sizes, init
-from graph import Graph
 
 
-def draw_weighted_graph(adj_matrix, is_metro_graph=False, metro_graph_with_compression=True):
+def draw_weighted_graph(adj_matrix, is_metro_graph=False, metro_graph_with_compression=True) -> None:
     n = len(adj_matrix)
     G = nx.DiGraph()
 
-    # Add nodes
+    # add nodes
     for i in range(n):
         G.add_node(i)
 
-    # Add weighted edges
+    # add weighted edges
     for i in range(n):
         for j in range(n):
             if adj_matrix[i][j] != '_':
@@ -83,7 +82,7 @@ def draw_weighted_graph(adj_matrix, is_metro_graph=False, metro_graph_with_compr
     plt.figure(figsize=figsize, dpi=dpi)
 
     edge_style = 'arc3, rad = 0.075'
-    # Draw nodes & edges
+    # draw nodes & edges
     nx.draw(
         G, pos,
         with_labels=True,
@@ -95,7 +94,7 @@ def draw_weighted_graph(adj_matrix, is_metro_graph=False, metro_graph_with_compr
         connectionstyle=edge_style
     )
 
-    # Draw edge labels (weights)
+    # draw edge labels (weights)
     nx.draw_networkx_edge_labels(
         G, pos,
         edge_labels=nx.get_edge_attributes(G, 'weight'),
@@ -107,7 +106,3 @@ def draw_weighted_graph(adj_matrix, is_metro_graph=False, metro_graph_with_compr
 
     plt.title("Graph Visualization")
     plt.show()
-
-
-gg = Graph("19")
-draw_weighted_graph(gg.adjacency_matrix, is_metro_graph=gg.name=="19", metro_graph_with_compression=True)

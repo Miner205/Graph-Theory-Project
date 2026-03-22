@@ -1,5 +1,7 @@
 import os
 from graph import Graph
+import better_display
+import better_display_3
 
 
 # Functional programing might have made the main loop easier and more scalable.
@@ -40,7 +42,7 @@ def display_graph(current_graph) -> None:
         print('"adjacency": Adjacency matrix of the graph.')
         print('"degrees": Adjacency matrix with degrees of the graph.')
         print('"incidence": Incidence matrix of the graph.')
-        print('"both": Both matrices of the graph')
+        print('"both": Both matrices (adjacency & incidence) of the graph.')
         print('Type "go back" to go back to the main options.')
         display_choice = input()
         print()
@@ -193,18 +195,78 @@ def quitting() -> bool:
     return False
 
 
+def draw_graph(current_graph) -> None:
+    draw_choice = None
+    while draw_choice not in ["m1", "m1-19", "m1-19-c", "m3", "m3-a", "go back"]:
+        if draw_choice is not None:
+            if draw_choice == "m2":
+                print("This drawing option has not been implemented yet, choose another one.\n")
+            else:
+                print("This is not a valid drawing option.\n")
+        print("How would you like to draw the graph:")
+        print('"m1": Method 1 = networkx and matplotlib (not recommended for graph 19). Show the graph in matplotlib.')
+        print('"m1-19": Method 1, with accurate gps coords of stations (only for graph 19). Show the metro graph in matplotlib.')
+        print('"m1-19-c": Method 1, with tweaked gps coords of stations (only for graph 19). Show the metro graph in matplotlib.')
+        print('"m2": Method 2 = pygame [WIP/not done]. -.')
+        print('"m3": Method 3 = folium (only for graph 19). Show the metro graph in browser with an HTML file.')
+        print('"m3-a": Method 3, will all stations (only for graph 19). Show the metro graph in browser with an HTML file.')
+        print('Type "go back" to go back to the main options.')
+        draw_choice = input()
+        print()
+    if draw_choice != "go back":
+        print(current_graph)
+        print()
+        if draw_choice == "m1":
+            print("Method 1 - Show the graph in matplotlib:")
+            if current_graph.name == "19":
+                print('note: options "m1-19" ou "m1-19-c" are recommended to better show/draw graph 19.')
+            print("- close the matplotlib window to continue -")
+            better_display.draw_weighted_graph(current_graph.adjacency_matrix)
+            print()
+        if draw_choice == "m1-19":
+            print("Method 1 - Show the metro graph in matplotlib:")
+            if current_graph.name != "19":
+                print('note: you are not supposed to use this drawing option for this graph, but it will not crash ; it will act like option "m1".')
+            print("- close the matplotlib window to continue -")
+            better_display.draw_weighted_graph(current_graph.adjacency_matrix, is_metro_graph=current_graph.name=="19", metro_graph_with_compression=False)
+            print()
+        if draw_choice == "m1-19-c":
+            print("Method 1 - Show the 'compressed' metro graph in matplotlib:")
+            if current_graph.name != "19":
+                print('note: you are not supposed to use this drawing option for this graph, but it will not crash ; it will act like option "m1".')
+            print("- close the matplotlib window to continue -")
+            better_display.draw_weighted_graph(current_graph.adjacency_matrix, is_metro_graph=current_graph.name=="19")
+            print()
+        if draw_choice == "m3":
+            if current_graph.name == "19":
+                print("Method 3 - Show the metro graph in browser with an HTML file:")
+                better_display_3.draw_metro_graph(current_graph)
+            else:
+                print(f"This drawing method is only intended for the Paris metro graph (graph '19', not graph '{current_graph.name}').")
+            print()
+        if draw_choice == "m3-a":
+            if current_graph.name == "19":
+                print("Method 3 - Show the metro graph in browser with an HTML file:")
+                better_display_3.draw_metro_graph(current_graph, with_all_stations=True)
+            else:
+                print(f"This drawing method is only intended for the Paris metro graph (graph '19', not graph '{current_graph.name}').")
+            print()
+    print("\n")
+
+
 if __name__ == '__main__':
     graph = choosing_graph(None)
     print('The graph "' + graph.name + '" as been set as the current graph.\n\n\n')
     quit_program = False
     while not quit_program:
         option_choice = None
-        while option_choice not in ["graph", "display", "copy", "minimum-value path", "save minimum-value graph", "quit"]:
+        while option_choice not in ["graph", "display", "draw", "copy", "minimum-value path", "save minimum-value graph", "quit"]:
             if option_choice is not None:
                 print("This is not a valid option.\n")
             print("What would you like to do:")
             print('"graph": Change graph.')
             print('"display": Display graph as matrix.')
+            print('"draw": Draw/Show graph.')
             print('"copy": Copy graph.')
             print('"minimum-value path": Compute minimum-value paths in graph using Floyd-Warshall algorithm.')
             print('"save minimum-value graph": Save minimum-value paths as a new graph.')
@@ -216,6 +278,8 @@ if __name__ == '__main__':
             graph = choosing_graph(graph)
         elif option_choice == "display":
             display_graph(graph)
+        elif option_choice == "draw":
+            draw_graph(graph)
         elif option_choice == "copy":
             graph = copy_graph(graph)
         elif option_choice == "minimum-value path":
