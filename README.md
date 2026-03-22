@@ -32,6 +32,7 @@ https://github.com/Miner205/Graph-Theory-Project
 - floyd-warshall algo.
 - absorbing circuit stuff.
 - main while loop.
+- better displays/graphs drawing : method 1 with networkx and matplotlib, method 2 with pygame [WIP/not done], method 3 with folium.
 - ...
 
 # Test graphs list - provenance/use case :
