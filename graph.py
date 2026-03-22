@@ -140,6 +140,13 @@ class Graph:
                         counter += 1
                         distance[i][j] = distance[i][k] + distance[k][j] # If it does, reassign that distance to the smaller one, the sum.
                         predecessors[i][j] = predecessors[k][j] # Updates predecessor in the matrix
+
+                        for l in range(self.nb_vertices):
+                            if distance[l][l] < 0:  # The check is simple : if a path from a vertice to itself is negative, it means 1 - There is a cycle, 2 - Per definition it's absorbent (negative cost). Thus not possible to seek shortest paths here.
+                                print("The graph contains at least one absorbent cycle starting and ending in " + str(l) + ".")
+                                self.floyd_warshall_graph = ["absorbent"]
+                                return
+
                         if show_modifications is True:
                             print("Modification n°" + str(counter) + ":\n")
                             print("Updated distance matrix")
@@ -189,12 +196,6 @@ class Graph:
                                 print()
 
                             print()
-
-        for i in range(self.nb_vertices):
-            if distance[i][i] < 0: # The check is simple : if a path from a vertice to itself is negative, it means 1 - There is a cycle, 2 - Per definition it's absorbent (negative cost). Thus not possible to seek shortest paths here.
-                print("The graph contains at least one absorbent cycle starting and ending in " + str(i) + ".")
-                self.floyd_warshall_graph = ["absorbent"]
-                return
         self.floyd_warshall_graph = [distance,predecessors]
         return
 
