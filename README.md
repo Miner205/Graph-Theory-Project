@@ -23,7 +23,6 @@ https://github.com/Miner205/Graph-Theory-Project
 ... (finally, not done)
 
 # ToDo :
-- execution traces txt
 - ...
 
 # Functionalities done :
@@ -36,6 +35,10 @@ and save minimum-value paths as a new graph.
 - main while loop.
 - better displays/graphs drawing : method 1 with networkx and matplotlib, method 2 with pygame [WIP/not done], method 3 with folium.
 - ...
+
+# other things done :
+- execution traces txt
+- graphs drawing jpg
 
 # Test graphs list - provenance/use case :
 - 1 to 13 = Provided test graphs.
