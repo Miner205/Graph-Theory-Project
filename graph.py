@@ -142,7 +142,7 @@ class Graph:
                         predecessors[i][j] = predecessors[k][j] # Updates predecessor in the matrix
 
                         for l in range(self.nb_vertices):
-                            if distance[l][l] < 0:  # The check is simple : if a path from a vertice to itself is negative, it means 1 - There is a cycle, 2 - Per definition it's absorbent (negative cost). Thus not possible to seek shortest paths here.
+                            if distance[l][l] < 0:  # The check is simple : if a path from a vertice to itself is negative, it means 1- There is a cycle, 2- Per definition it's absorbent (negative cost). Thus not possible to seek shortest paths here.
                                 print("The graph contains at least one absorbent cycle starting and ending in " + str(l) + ".")
                                 self.floyd_warshall_graph = ["absorbent"]
                                 return
